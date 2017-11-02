@@ -1,0 +1,91 @@
+1. 要读取的文件的目录是否要特殊指定，在传入文件名称后，在既定的范围内进行查找文件，找到便读取，未找到则提示信息；
+2. text_host_file.py文件中的 def __init__(self, filename,argMgr)的方法中，把argMgr实例中带入的指定行号、指定host列号、指定IP列号、指定的分隔符号，赋值给变量，这样是否正确？
+3. 指定行号、指定host列号、指定IP列号还是根据使用习惯，从1进行标号。
+4. text_host_file.py和excel_host_file.py文件中def __del__(),调用父类析构的怎么用？
+       excel_host_file文件中的__del__：
+        def __del__(self):
+        print('ExcelHostFile.__del__')
+        SourceHostFile.__del__(self)
+        pass
+
+        如上代码会出现：
+        AttributeError: 'ExcelHostFile' object has no attribute 'isOpen'的错误。注释掉SourceHostFile.__del__(self)方法后不再报错。
+
+5. 增加了epilog，在使用--help时，可以打印出命令参数的使用方法，对-a，-h参数进行了调整，调整为必填项。
+    epilog，如何控制换行
+
+6. 遍历字典的方法
+
+7. 将str转换为list
+
+8. 将str追加到list中
+
+9. 将excel中的数据保存到二维数组中
+
+10. obj的属性，定义在__init__中的变量，是不是属性？
+
+11. io.UnsupportedOperation: not writable
+    在打开文件时，没有指定打开的类型。
+
+12.    self.hostfile=open(DestinationHostFile.WinsHostsPath,'rw')
+ValueError: must have exactly one of create/read/write/append mode
+    不能同时使用'rw'的模式
+
+13.    fileinfo=self.hostfile.readlines()
+io.UnsupportedOperation: not readable
+    在读取文件时，使用w+的模式，该问题得到解决。
+        def open(self):
+        self.hostfile=open(DestinationHostFile.WinsHostsPath, 'w+')
+        pass
+
+14.    fileinfo=self.hostfile.readlines('r')
+TypeError: integer argument expected, got 'str'
+
+15. os模块
+    os.listdir()
+
+16. datetime模块
+    time的格式化,获取的时间使用strftime('%Y%m%d%H%M%S')，其中Y,H,M,S要大写
+    def strftime(self, fmt: str) -> str: ...
+    def getTime():
+    rightnow1=datetime.datetime.now().strftime('%Y%m%d%H%M%S')
+    rightnow2=datetime.datetime.now().strftime('%Y/%m/%d-%H:%M-%S')
+    print(rightnow1,rightnow2)
+    输出结果：
+    20171025102705   2017/10/25-10:27-05
+    需要熟悉python格式化的字符
+
+17.     with open(dst, 'wb') as fdst:
+PermissionError: [Errno 13] Permission denied: 'hosts-20171027092320-827.bak'
+    需要熟悉目录操作、文件操作
+    http://www.cnblogs.com/rollenholt/archive/2012/04/23/2466179.html
+
+18. 拼接字符串
+    dstName= 'python import'+rNum+'.bak'
+TypeError: must be str, not int
+使用+进行拼接字符串，只能是str+str
+
+19.python ValueError: attempted relative import beyond top-level package
+
+20.在调用class中的方法时，传入的参数可以在方法体中直接使用，不用在使用self进行定义，如以下列子：
+     class testM(object):
+        def copyMyFile(self,rNum):
+        self.rn = rNum
+        print('rNum is {}'.format(rNum))
+        print('self.rn is {}'.format(self.rn))
+     if __name__=='__main__':
+        dpath = 'C:\Windows\System32\drivers\etc'
+        mytestM = testM()
+        mytestM.copyMyFile(8)
+
+21. 当要读取的文件为excel文件时，未指定-t excel时，会出现
+  File "E:/PyWorkspace/base/excesise/parser/addhost_v2\src\text_host_file.py", line 23, in readHosts
+    lines = self.text_file.readlines()
+UnicodeDecodeError: 'gbk' codec can't decode byte 0xa2 in position 50: illegal multibyte sequence
+的错误
+
+
+22.
+源码：        line_num = self.argMgr.get_line_num_argument_value
+    if len(lines)+1 < line_num:
+TypeError: '<' not supported between instances of 'int' and 'method'
