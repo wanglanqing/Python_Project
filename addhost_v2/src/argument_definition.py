@@ -110,15 +110,15 @@ class ArgumentDefinition(object):
         return ArgumentDefinition.argument_name_dictionary[ArgumentDefinition.backup]['help']
 
     def get_update_argument_short_name():
-        return ArgumentDefinition.argument_name_dictionary[ArgumentDefinition.update]['shortname']
+        return ArgumentDefinition.argument_name_dictionary[ArgumentDefinition.operate]['shortname']
     def get_update_argument_long_name():
-        return ArgumentDefinition.argument_name_dictionary[ArgumentDefinition.update]['longname']
+        return ArgumentDefinition.argument_name_dictionary[ArgumentDefinition.operate]['longname']
     def get_update_argument_destination_name():
-        return ArgumentDefinition.argument_name_dictionary[ArgumentDefinition.update]['dest']
+        return ArgumentDefinition.argument_name_dictionary[ArgumentDefinition.operate]['dest']
     def get_update_argument_help_info():
-        return ArgumentDefinition.argument_name_dictionary[ArgumentDefinition.update]['help']
+        return ArgumentDefinition.argument_name_dictionary[ArgumentDefinition.operate]['help']
     def get_update_argument_choices():
-        return ArgumentDefinition.argument_name_dictionary[ArgumentDefinition.update]['choices']
+        return ArgumentDefinition.argument_name_dictionary[ArgumentDefinition.operate]['choices']
 
     def get_sort_argument_short_name():
         return ArgumentDefinition.argument_name_dictionary[ArgumentDefinition.sort]['shortname']

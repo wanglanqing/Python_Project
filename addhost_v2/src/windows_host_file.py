@@ -8,11 +8,7 @@ class WindowsHostFile(DestinationHostFile):
     # WinsHostsPath = 'C:\Windows\System32\drivers\etc\hosts'
     def __init__(self):
         self.WinsHostsPath ='C:\Windows\System32\drivers\etc\\'
-        # self.dictHosts=dictHosts
-        # self.argMgr=argMgr
-        # self.backupType=argMgr.parseArguments()[argMgr.getBackupArgumentDestinationName()]
-        # self.updateType=argMgr.parseArguments()[argMgr.getUpadteArgumentDestinationName()]
-        # self.sortType=argMgr.parseArguments()[argMgr.getSortArgumentDestinationName()]
+        print('****windows Host File****')
         pass
 
     def open(self):
