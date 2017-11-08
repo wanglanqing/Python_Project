@@ -12,10 +12,7 @@ class DestinationHostFile(object):
         pass
 
     #加载目标文件
-    def open(self,filename):
-        with open(filename) as f:
-            f.readlines()
-        print('DestinationHostFile "open()"')
+    def open(self):
         pass
 
     def save(self,dictHosts):
@@ -51,10 +48,8 @@ class DestinationHostFile(object):
         print(backupHostFileName)
         return backupHostFileName
 
-    def readOsHostsInfo(self,path):
-        self.path = path
-        oshosts= open(path+'hosts','r').readlines()
-        return oshosts
+    def read_destination_hosts(self):
+        return {}
 
     def updateHostsByUdateType(self,dictHosts,oshosts):
         self.dictHosts = dictHosts
@@ -66,6 +61,9 @@ class DestinationHostFile(object):
 
 
         pass
+
+    def is_source_info_in_destination_info(self):
+        return []
 
     def sortByIP(self):
         pass
