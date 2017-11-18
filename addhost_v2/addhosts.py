@@ -4,6 +4,7 @@ from addhostslib.argument_manager import ArgumentManager
 from addhostslib.destination_exception import DestinationException
 from addhostslib.host_file_manager import HostFileManager
 
+
 if __name__=='__main__':
     try:
         # 构造命令行参数解析管理器，并解析命令行参数

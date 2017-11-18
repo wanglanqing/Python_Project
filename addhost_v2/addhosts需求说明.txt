@@ -20,7 +20,7 @@
 命令格式及参数说明：
 	addhosts -f <filename>
 	addhosts -f <filename> [-t excel] [-i <lines>] [-a <ipaddrcolumn>] [-h <hostcolumn>] [-b <bakeupname>] [-u true|false] [-s {asc|desc|none}]
-	addhosts -f <filename> [-t text [-d <delimiter>]] [-i <lines>] [-a <ipaddrcolumn>] [-h <hostcolumn>] [-b <bakeupname>] [-u {update|ignore|terminate}] [-s {asc|desc|none}]
+	addhosts -f <filename> [-t text [-d <delimiter>]] [-n <lines>] [-a <ipaddrcolumn>] [-h <hostcolumn>] [-b <bakeupname>] [-u {update|ignore|terminate}] [-s {asc|desc|none}]
 	addhosts -v|?
 		-f: 指定用于读入ip和主机名的源文件，必须指定该参数；
 		-t: 用于指定源文件的类型，有效值为：excel、text，默认为“text”，当参数值为“text”时，可以指定文件中字段的分隔符号，参考“-d”参数说明；
@@ -30,8 +30,7 @@
 		-h: 指定主机名在源文件中的字段号，字段号从1开始；
 		-b: 指定在添加主机配置数据前备份hosts文件的备份文件名，默认在当前目录下备份hosts为hosts-<YYYYMMDDHHMISS>-<###>.bak文件，
 		    如果该文件已经存在，随机数加一再继续保存，直到备份文件不存在可以保存为止;
-		    使用环境变量MY_DAT指定bak文件的保存目录。如果该变量不存在，就使用命令执行的当前目录。
-		-u: 当源文件的主机名已经在hosts文件中时，该参数用于指定命令的处理方式，
+		-o: 当源文件的主机名已经在hosts文件中时，该参数用于指定命令的处理方式，
 		    update: 更新，
 		    ignore: 忽略，
 		    terminate: 不更新并且终止命令的继续执行。

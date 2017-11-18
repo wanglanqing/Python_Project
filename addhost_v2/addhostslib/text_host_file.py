@@ -1,13 +1,16 @@
 #coding:utf-8
 from .source_host_file import SourceHostFile
 from .argument_exception import *
+from .commonlog import CommonLog
+import logging
 
 class TextHostFile(SourceHostFile):
     def __init__(self, argMgr):
-         super(TextHostFile, self).__init__(argMgr)
-         #self.fd = None
-         print('TextHostFile construtor')
-         pass
+        logging.setLoggerClass(CommonLog)
+        self.logger = logging.getLogger(__name__)
+        super(TextHostFile, self).__init__(argMgr)
+        print('TextHostFile construtor')
+        pass
 
     def open(self):
         print('TextHostFile "open()"')
@@ -24,9 +27,11 @@ class TextHostFile(SourceHostFile):
         # 读取hosts文件到lines列表
         lines = self.text_file_stream.readlines()
         if len(lines) <= begin:
+            self.logger.error(LineNumArgumentOverFlowException())
             raise LineNumArgumentOverFlowException()
 
         if addr_col_num == host_name_col_num:
+            self.logger.error(AddrColNumArgumentIsEqualToHostNameColNumArgumentException())
             raise AddrColNumArgumentIsEqualToHostNameColNumArgumentException()
 
         # 从line_num开始读取数据行，并且构造self.ip_host_dict字典表
@@ -34,8 +39,10 @@ class TextHostFile(SourceHostFile):
             line = lines[idx]
             cols = self.stript(line.split(delimiter))
             if len(cols) <= addr_col_num:
+                self.logger.error(IpAddressColumnNumArgumentOverflowException())
                 raise IpAddressColumnNumArgumentOverflowException()
             if len(cols) <= host_name_col_num:
+                self.logger.error(HostNameColumnNumArgumentOverflowException())
                 raise HostNameColumnNumArgumentOverflowException()
             ip_addr = cols[addr_col_num]
             host = cols[host_name_col_num]
@@ -57,5 +64,4 @@ class TextHostFile(SourceHostFile):
 
     def __del__(self):
      print('TextHostFile.__del__')
-     # SourceHostFile.__del__(self)
      pass

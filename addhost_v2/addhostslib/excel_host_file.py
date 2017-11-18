@@ -2,10 +2,14 @@
 from openpyxl import load_workbook
 from .source_host_file import SourceHostFile
 from .argument_exception import *
+from .commonlog import CommonLog
+import logging
 
 
 class ExcelHostFile(SourceHostFile):
     def __init__(self, argMgr):
+        logging.setLoggerClass(CommonLog)
+        self.logger = logging.getLogger(__name__)
         super(ExcelHostFile,self).__init__(argMgr)
         self.sheet = None
         print('ExcelHostFile construtor')
@@ -18,21 +22,24 @@ class ExcelHostFile(SourceHostFile):
         if sheetname not in sheetnames:
             raise SheetNameArgumentNotFoundException()
         self.sheet = workbook.get_sheet_by_name(sheetname)
-        # self.sheet = self.wb.active
         print('ExcelHostFile "open()"')
 
     def read_source_host_file(self):
         begin = self.argMgr.get_line_num_argument_value()
         max_row = self.sheet.max_row
         if begin > max_row:
+            self.logger(LineNumArgumentOverFlowException())
             raise LineNumArgumentOverFlowException()
         addr_col_num = self.argMgr.get_addr_col_num_argument_value() - 1 # cells元组索引，所以需要减1
         if addr_col_num >= self.sheet.max_column:
+            self.logger(IpAddressColumnNumArgumentOverflowException())
             raise IpAddressColumnNumArgumentOverflowException()
         host_name_col_num = self.argMgr.get_host_name_col_num_argument_value() - 1 # cells元组索引，所以需要减1
         if host_name_col_num >= self.sheet.max_column:
+            self.logger(HostNameColumnNumArgumentOverflowException())
             raise HostNameColumnNumArgumentOverflowException()
         if addr_col_num == host_name_col_num:
+            self.logger(AddrColNumArgumentIsEqualToHostNameColNumArgumentException())
             raise AddrColNumArgumentIsEqualToHostNameColNumArgumentException()
 
 

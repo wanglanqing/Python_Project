@@ -3,7 +3,9 @@
 #test3
 
 #127.0.0.1 localhost
-123.57.56.121 webServer alias  #zhesshi  adafd dafd a
-123.57.56.120 MDSServer alias2
-123.57.56.122 DBServer alisa3
-123.57.56.123 AMServer alisa4
+123.57.56.121	abc	#zhesshi  adafd dafd a
+123.57.56.120	MDSServer
+
+123.57.56.123	alisa4	AMServer
+
+123.57.56.1	liujiashuai

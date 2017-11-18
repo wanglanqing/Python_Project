@@ -2,3 +2,4 @@
 123.57.56.120,MDSServer,alias2
 123.57.56.122,DBServer,alisa3
 123.57.56.123,AMServer,alisa4
+123.57.56.123,GWServer,alisa4

@@ -1,10 +1,13 @@
 #coding:utf-8
 import argparse
 from .argument_exception import *
+from .commonlog import CommonLog
+import logging
 
 class ArgumentManager(object):
     def __init__(self):
-        # self.initialize_argument_name_list()
+        logging.setLoggerClass(CommonLog)
+        self.logger = logging.getLogger(__name__)
         self.create_argument_parser()
         self.add_file_name_argument()
         self.add_file_type_argument()
@@ -16,6 +19,7 @@ class ArgumentManager(object):
         self.add_update_type_argument()
         self.add_sort_type_argument()
         self.add_sheet_name_argument()
+
 
     def create_argument_parser(self):
         self.parser = argparse.ArgumentParser(
@@ -154,25 +158,31 @@ class ArgumentManager(object):
 
     def parse_arguments(self):
         self.args = vars(self.parser.parse_args())
+        self.logger.info('\n参数信息为：')
+        self.logger.info(self.args)
         self.file_name_argument_value = self.args[ArgumentDefinition.get_file_name_argument_destination_name()]
         if self.file_name_argument_value == "" or self.file_name_argument_value == None:
+            self.logger.error(FileNameArgumentIsEmptyStringException())
             raise FileNameArgumentIsEmptyStringException()
 
         self.file_type_argument_value = self.args[ArgumentDefinition.get_file_type_argument_destination_name()]
 
         self.line_num_argument_value = self.args[ArgumentDefinition.get_line_num_argument_destination_name()]
         if self.line_num_argument_value <= 0:
+            self.logger.error(LineNumArgumentLEZeroException())
             raise LineNumArgumentLEZeroException()
 
         self.delimiter_argument_value = self.args[ArgumentDefinition.get_delimiter_argument_destination_name()]
 
         self.addr_col_num_argument_value = self.args[ArgumentDefinition.get_addr_col_num_argument_destination_name()]
         if self.addr_col_num_argument_value <=0:
+            self.logger.error(AddrColNumArgumentLEZeroException())
             raise AddrColNumArgumentLEZeroException()
 
         self.host_name_col_num_argument_value = self.args[ArgumentDefinition.get_host_name_col_num_argument_destination_name()]
         if self.host_name_col_num_argument_value <= 0 :
-            raise  HostColNumArgumentLEZeroException
+            self.logger(HostColNumArgumentLEZeroException())
+            raise  HostColNumArgumentLEZeroException()
 
         self.update_argument_value = self.args[ArgumentDefinition.get_update_argument_destination_name()]
 

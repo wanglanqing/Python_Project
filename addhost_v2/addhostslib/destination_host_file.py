@@ -7,16 +7,19 @@ import shutil
 from .path_manager import PathManager
 from .argument_definition import ArgumentDefinition
 from .destination_exception import *
+from .commonlog import CommonLog
+import logging
 
 
 class WindowsHostFile(object):
     def __init__(self, argMgr):
+        logging.setLoggerClass(CommonLog)
+        self.logger = logging.getLogger(__name__)
         self.argMgr=argMgr
         self.dest_host_file_stream = None
         self.dest_host_file_lines = []
         self.ipaddr_line_content_dict = {}
         self.host_ip_dict = {}
-        # self.dest_host_file_path = ''
         self.bakup_file_name = self.argMgr.get_backup_argument_value()
 
     def open(self):
@@ -43,6 +46,7 @@ class WindowsHostFile(object):
             self.ipaddr_line_content_dict[ipaddr]=[line_index, ipaddr, set(hosts), comment]
             for host in hosts:
                 if host in self.host_ip_dict:
+                    self.logger(DuplicateHostException(host))
                     raise DuplicateHostException(host)
                 self.host_ip_dict[host]=ipaddr
 
@@ -74,6 +78,7 @@ class WindowsHostFile(object):
                 elif operation == ArgumentDefinition.get_update_argument_ignore_choice():
                     continue
                 elif operation == ArgumentDefinition.get_update_argument_terminate_choice():
+                    self.logger(ExistsIpAddressException(ipaddr))
                     raise ExistsIpAddressException(ipaddr)
             else:
                 src_host_set = src_ip_hosts_dict[ipaddr]
@@ -135,4 +140,4 @@ class WindowsHostFile(object):
             try:
                 shutil.copyfile(PathManager.get_dest_host_file_path() , self.bakup_file_name)
             except Exception as e:
-                print('指定的备份路径有误：',e)
+                self.logger('指定的备份路径有误：',e)
