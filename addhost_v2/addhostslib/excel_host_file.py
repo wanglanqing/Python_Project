@@ -12,7 +12,7 @@ class ExcelHostFile(SourceHostFile):
         self.logger = logging.getLogger(__name__)
         super(ExcelHostFile,self).__init__(argMgr)
         self.sheet = None
-        print('ExcelHostFile construtor')
+        self.logger.info('ExcelHostFile construtor')
         pass
 
     def open(self):
@@ -20,26 +20,27 @@ class ExcelHostFile(SourceHostFile):
         workbook = load_workbook(self.argMgr.get_file_name_argument_value())
         sheetnames = workbook.get_sheet_names()
         if sheetname not in sheetnames:
+            self.logger.error(SheetNameArgumentNotFoundException())
             raise SheetNameArgumentNotFoundException()
         self.sheet = workbook.get_sheet_by_name(sheetname)
-        print('ExcelHostFile "open()"')
+        self.logger.info('ExcelHostFile "open()"')
 
     def read_source_host_file(self):
         begin = self.argMgr.get_line_num_argument_value()
         max_row = self.sheet.max_row
         if begin > max_row:
-            self.logger(LineNumArgumentOverFlowException())
+            self.logger.error(LineNumArgumentOverFlowException())
             raise LineNumArgumentOverFlowException()
         addr_col_num = self.argMgr.get_addr_col_num_argument_value() - 1 # cells元组索引，所以需要减1
         if addr_col_num >= self.sheet.max_column:
-            self.logger(IpAddressColumnNumArgumentOverflowException())
+            self.logger.error(IpAddressColumnNumArgumentOverflowException())
             raise IpAddressColumnNumArgumentOverflowException()
         host_name_col_num = self.argMgr.get_host_name_col_num_argument_value() - 1 # cells元组索引，所以需要减1
         if host_name_col_num >= self.sheet.max_column:
-            self.logger(HostNameColumnNumArgumentOverflowException())
+            self.logger.error(HostNameColumnNumArgumentOverflowException())
             raise HostNameColumnNumArgumentOverflowException()
         if addr_col_num == host_name_col_num:
-            self.logger(AddrColNumArgumentIsEqualToHostNameColNumArgumentException())
+            self.logger.error(AddrColNumArgumentIsEqualToHostNameColNumArgumentException())
             raise AddrColNumArgumentIsEqualToHostNameColNumArgumentException()
 
 
@@ -64,9 +65,9 @@ class ExcelHostFile(SourceHostFile):
             self.host_ip_dict[host] = ip_addr
 
     def close(self):
-        print('ExcelHostFile "close()"')
+        self.logger.info('ExcelHostFile "close()"')
 
     def __del__(self):
-        print('ExcelHostFile.__del__')
+        self.logger.info('ExcelHostFile.__del__')
         # SourceHostFile.__del__(self)
         pass

@@ -1,15 +1,19 @@
 #coding:utf-8
+from .commonlog import CommonLog
+import logging
 
 class SourceHostFile(object):
 
     # 创建文件对象
     def __init__(self, argMgr):
+        logging.setLoggerClass(CommonLog)
+        self.logger = logging.getLogger(__name__)
         self.argMgr = argMgr
         self.lines = []
         self.ip_hosts_dict = {}
         self.host_ip_dict = {}
         self.is_open = False
-        print('SourceHostFile construtor')
+        self.logger.info('SourceHostFile construtor')
         pass
 
     def stript(self, str_list, chars=None):
@@ -24,25 +28,25 @@ class SourceHostFile(object):
         return self.host_ip_dict
 
     def open(self):
-        print('SourceHostFile "open()"')
+        self.logger.info('SourceHostFile "open()"')
         #在派生类中设置isOpen标志
         #isOpen = True
         pass
 
     def read_source_host_file(self):
-        print('SourceHostFile "read()"')
+        self.logger.info('SourceHostFile "read()"')
         return {}
         pass
 
     def close(self):
-        print('SourceHostFile "close()"')
+        self.logger.info('SourceHostFile "close()"')
         pass
 
     def __del__(self):
-        print('SourceHostFile: __del__')
+        self.logger.info('SourceHostFile: __del__')
         if self.is_open :
             self.close()
             self.is_open = False
-        print(self.fileName,'is closed')
+        self.logger.info(self.fileName,'is closed')
         pass
 

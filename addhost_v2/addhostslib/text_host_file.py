@@ -9,11 +9,11 @@ class TextHostFile(SourceHostFile):
         logging.setLoggerClass(CommonLog)
         self.logger = logging.getLogger(__name__)
         super(TextHostFile, self).__init__(argMgr)
-        print('TextHostFile construtor')
+        self.logger.info('TextHostFile construtor')
         pass
 
     def open(self):
-        print('TextHostFile "open()"')
+        self.logger.info('TextHostFile "open()"')
         self.text_file_stream = open(self.argMgr.get_file_name_argument_value())
         self.is_open = True
 
@@ -59,9 +59,9 @@ class TextHostFile(SourceHostFile):
 
     def close(self):
      self.close(self.text_file_stream)
-     print('TextHostFile "close()"')
+     self.logger.info('TextHostFile "close()"')
      pass
 
     def __del__(self):
-     print('TextHostFile.__del__')
+     self.logger.info('TextHostFile.__del__')
      pass

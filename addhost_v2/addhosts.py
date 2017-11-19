@@ -24,8 +24,11 @@ if __name__=='__main__':
         desc_host_file_obj.open()
         desc_host_file_obj.read_destination_host_file()
         desc_host_file_obj.merge_hosts(src_host_file_obj.get_ip_hosts_dict(), src_host_file_obj.get_host_ip_dict())
+        desc_host_file_obj.backup()
         desc_host_file_obj.save()
     except ArgumentException as e:
         print(e)
     except DestinationException as e:
         print(e)
+    except Exception as e:
+        print('s****',e)

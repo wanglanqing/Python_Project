@@ -46,7 +46,7 @@ class WindowsHostFile(object):
             self.ipaddr_line_content_dict[ipaddr]=[line_index, ipaddr, set(hosts), comment]
             for host in hosts:
                 if host in self.host_ip_dict:
-                    self.logger(DuplicateHostException(host))
+                    self.logger.error(DuplicateHostException(host))
                     raise DuplicateHostException(host)
                 self.host_ip_dict[host]=ipaddr
 
@@ -78,7 +78,7 @@ class WindowsHostFile(object):
                 elif operation == ArgumentDefinition.get_update_argument_ignore_choice():
                     continue
                 elif operation == ArgumentDefinition.get_update_argument_terminate_choice():
-                    self.logger(ExistsIpAddressException(ipaddr))
+                    self.logger.error(ExistsIpAddressException(ipaddr))
                     raise ExistsIpAddressException(ipaddr)
             else:
                 src_host_set = src_ip_hosts_dict[ipaddr]
@@ -115,7 +115,7 @@ class WindowsHostFile(object):
 
     def save(self):
         # 依据self.ipaddr_line_content_dict的内容，更新self.dest_host_file_lines的内容
-        self.bakup_destination_host_file()
+        self.logger.info('开始保存并更新hosts文件')
         for ipaddr in self.ipaddr_line_content_dict:
             self.update_line(self.ipaddr_line_content_dict[ipaddr])
 
@@ -125,8 +125,9 @@ class WindowsHostFile(object):
             self.dest_host_file_stream.write(line + "\n")
         self.dest_host_file_stream.flush()
         self.dest_host_file_stream.truncate()
+        self.logger.info('保存完毕！')
 
-    def bakup_destination_host_file(self):
+    def backup(self):
         bakup_file_list = os.listdir(PathManager.get_backup_host_file_path())
         if self.bakup_file_name == None:
             time_stamp = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
@@ -135,9 +136,8 @@ class WindowsHostFile(object):
             backup_host_file_name = 'hosts-%s-%03d.bak' %(time_stamp, rand_num)
             while (backup_host_file_name in bakup_file_list):
                 backup_host_file_name =  'hosts-%s-%03d.bak' %(time_stamp, rand_num+1)
+            self.logger.info('缺省的备份路径是：%s', PathManager.get_backup_host_file_path() + backup_host_file_name)
             shutil.copyfile(PathManager.get_dest_host_file_path(), PathManager.get_backup_host_file_path() + backup_host_file_name)
         else:
-            try:
-                shutil.copyfile(PathManager.get_dest_host_file_path() , self.bakup_file_name)
-            except Exception as e:
-                self.logger('指定的备份路径有误：',e)
+            self.logger.info('自定义的备份路径是：%s', self.bakup_file_name)
+            shutil.copyfile(PathManager.get_dest_host_file_path(), self.bakup_file_name)

@@ -158,7 +158,7 @@ class ArgumentManager(object):
 
     def parse_arguments(self):
         self.args = vars(self.parser.parse_args())
-        self.logger.info('\n参数信息为：')
+        self.logger.info('参数信息为：')
         self.logger.info(self.args)
         self.file_name_argument_value = self.args[ArgumentDefinition.get_file_name_argument_destination_name()]
         if self.file_name_argument_value == "" or self.file_name_argument_value == None:
@@ -181,7 +181,7 @@ class ArgumentManager(object):
 
         self.host_name_col_num_argument_value = self.args[ArgumentDefinition.get_host_name_col_num_argument_destination_name()]
         if self.host_name_col_num_argument_value <= 0 :
-            self.logger(HostColNumArgumentLEZeroException())
+            self.logger.error(HostColNumArgumentLEZeroException())
             raise  HostColNumArgumentLEZeroException()
 
         self.update_argument_value = self.args[ArgumentDefinition.get_update_argument_destination_name()]

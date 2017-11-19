@@ -28,5 +28,9 @@ class PathManager(object):
             return dest_host_file_path
 
     def get_backup_host_file_path():
-        bakup_path = os.getcwd()
+        system_type = PathManager.get_system_type()
+        if system_type == 'windows':
+            bakup_path = os.getcwd() + '\\'
+        elif system_type == 'linux':
+            bakup_path = os.getcwd() + '/'
         return bakup_path
