@@ -82,7 +82,7 @@ class WindowsHostFile(object):
                     raise ExistsIpAddressException(ipaddr)
             else:
                 src_host_set = src_ip_hosts_dict[ipaddr]
-                new_idx = len(self.dest_host_file_lines)
+                new_idx = -1
                 self.ipaddr_line_content_dict[ipaddr] = [new_idx, ipaddr, src_host_set, ""]
                 for host in src_host_set:
                     if host in self.host_ip_dict:
@@ -108,7 +108,7 @@ class WindowsHostFile(object):
             self.dest_host_file_lines[idx] = ""
             return
 
-        if idx < len(self.dest_host_file_lines):
+        if idx > 0:
             self.dest_host_file_lines[idx] = "%s\t%s%s" % (ipaddr, hosts_str, comment)
         else:
             self.dest_host_file_lines.append("%s\t%s%s" % (ipaddr, hosts_str, comment))

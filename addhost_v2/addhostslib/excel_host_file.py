@@ -20,8 +20,8 @@ class ExcelHostFile(SourceHostFile):
         workbook = load_workbook(self.argMgr.get_file_name_argument_value())
         sheetnames = workbook.get_sheet_names()
         if sheetname not in sheetnames:
-            self.logger.error(SheetNameArgumentNotFoundException())
-            raise SheetNameArgumentNotFoundException()
+            self.logger.error(SheetNameArgumentNotFoundException(sheetname))
+            raise SheetNameArgumentNotFoundException(sheetname)
         self.sheet = workbook.get_sheet_by_name(sheetname)
         self.logger.info('ExcelHostFile "open()"')
 

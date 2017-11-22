@@ -65,9 +65,11 @@ class SheetNameArgumentException(ArgumentException):
     prefix = ArgumentDefinition.get_sheet_name_argument_long_name() + " " + ArgumentDefinition.get_sheet_name_argument_short_name() + " 参数值错误："
 
 class SheetNameArgumentNotFoundException(SheetNameArgumentException):
-    err_str = SheetNameArgumentException.prefix + ' 没有指定的sheet'
+    err_str = SheetNameArgumentException.prefix + "未找到指定的工作表："
+    def __init__(self, arg_value):
+        self.arg_value = arg_value
     def __str__(self):
-        return SheetNameArgumentNotFoundException.err_str
+        return SheetNameArgumentNotFoundException.err_str + self.arg_value
 
 class AddrColNumArgumentIsEqualToHostNameColNumArgumentException(ArgumentException):
     err_str = ArgumentDefinition.get_addr_col_num_argument_long_name() + " "\
