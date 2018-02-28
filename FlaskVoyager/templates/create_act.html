@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>新建模板和活动</title>
+</head>
+<body>
+    <form action="{{ url_for('create_act')}}" method="post">
+        <div>
+            <label>模板地址：<input name='template_adr' type="text" style="width: 420px" placeholder="https://display.adhudong.com/new/lottery_machine.html"></label><br>
+            <label>样式地址：<input name="css_adr" type="text" style="width: 420px" placeholder="https://display.adhudong.com/activity/favicon.ico"></label><br>
+            <label>模板类型名称：<input name="template_type_name" type="text" style="width: 320px" value="" ></label><br>
+            <label>模板名称：<input name="temlate_name" type="text" style="width: 320px" placeholder=""></label><br>
+            <label>活动名称：<input name="act_name" type="text" style="width: 320px" placeholder=""></label><br>
+            <input type="submit" value="提交">
+        </div>
+    </form>
+
+    <div id="result_area">
+        {{ res|safe }}
+    </div>
+
+</body>
+</html>
