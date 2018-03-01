@@ -50,15 +50,17 @@ class Create_template_act(object):
 
     def get_templateTypeId(self):
         sql = "select id from voyager.template_type where name='" + self.templateTypeName + "'"
+        print(sql)
         re = self.db.execute_sql(sql)
         if len(re)!= 1:
-            print('名称有问题')
+            print('get_templateTypeId名称有问题')
         else:
             templateTypeId = int(re[0][0])
             return templateTypeId
 
     def get_templateId(self):
         sql = "select id from voyager.base_template_info where template_type_id='" + str(self.get_templateTypeId()) + "'"
+        print(sql)
         re = self.db.execute_sql(sql)
         if len(re)!= 1:
             print('get_templateId有问题')
@@ -71,31 +73,11 @@ class Create_template_act(object):
         templateId=self.get_templateId()
         act_sql="""
         INSERT INTO voyager.base_act_info (act_type,act_name,banner_image_url,cover_image_url,award_num,free_num,begin_time,end_time,act_rule_info,`STATUS`,update_time,create_time,template_id,expand1,expand2,expand3,expand4,expand5,expand6,expand7,expand8,expand9,change_times
-        )VALUES(
-                1,
-                {0},
-                'https://img4.adhudong.com/award/201802/22/089c376e9519c85ab8ce5fced7c9ea49.jpg',
-                NULL,
-                {1},
-                {2},
-                NULL,
-                NULL,
+        )VALUES(1,{0},'https://img4.adhudong.com/award/201802/22/089c376e9519c85ab8ce5fced7c9ea49.jpg',
+                NULL,{1},{2},NULL,NULL,
                 '<p>参与活动即有机会获得大奖。活动为概率中奖，奖品数量有限，祝君好运。</p><p>惊喜一：1000元现金</p><p>惊喜二：500元现金</p><p>惊喜三：200元现金</p><p>惊喜四：100元现金</p><p>惊喜五：50元现金</p><p>惊喜六：幸运奖</p><p>重要声明：</p><p>1、实物类奖品将在活动结束后5-10个工作日内安排发货，请耐心等待</p><p>2、卡券类奖品使用规则详见卡券介绍页</p><p>3、通过非法途径获得奖品的，主办方有权不提供奖品1</p>',
-                1,
-                now(),
-                now(),
-                {3},
-                1,
-                NULL,
-                NULL,
-                NULL,
-                NULL,
-                NULL,
-                NULL,
-                NULL,
-                NULL,
-                NULL
-            );""".format(self.act_name, award_num, free_num, templateId)
+                1,now(),now(),{3},1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL
+            );""".format("'"+self.act_name+"'", award_num, free_num, templateId)
         print(act_sql)
         try:
             self.db.execute_sql(act_sql)
@@ -108,7 +90,7 @@ class Create_template_act(object):
         print(sql)
         re = self.db.execute_sql(sql)
         if len(re)!= 1:
-            print('活动名称有问题')
+            print('get_actId,有问题')
         else:
             act_id = int(re[0][0])
             return act_id

@@ -21,20 +21,31 @@ def show():
         print(ids.split(','))
         if len(ids) != 0:
             res_re = get_ad_simulation_info(ids.split(','))
-    return  render_template("show_re.html",res=res, title=title)
+    return  render_template("show_re.html",res=res_re, title=title)
 
 @app.route('/create_act/', methods=['POST','GET'])
 def create_act():
     if request.method=='GET':
         print 1111111111
+        return render_template("create_act.html", template_adr='1111')
     else:
-        template_adr=requests.get('template_adr')
-        css_adr=requests.get('css_adr')
-        template_type_name=requests.get('template_type_name')
-        temlate_name=requests.get('temlate_name')
-        act_name=requests.get('act_name')
-        print(template_adr)
-    return render_template("create_act.html",res='ok' )
+        template_adr= request.form.get('template_adr')
+        css_adr="'" + request.form.get('css_adr') + "'"
+        template_type_name=request.form.get('template_type_name')
+        temlate_name=request.form.get('temlate_name')
+        act_name=request.form.get('act_name')
+        # 为模板类型名称
+        ct = Create_template_act(template_type_name, act_name)
+        # 创建模板类型，create_template_type(self, classifi, locationAdress, preview="https://img0.adhudong.com/template/201802/24/999337a35a1a9169450685cc66560a05.png",prizesNum=6)
+        # ct.create_template_type(template_adr)
+        # 创建模板 ct.create_template(templateName, templateStyleUrl)
+        # ct.create_template(temlate_name, css_adr)
+        # 创建活动，create_act(self, act_name,free_num=20, award_num=6)
+        ct.create_act()
+        # 创建活动关联的奖品，
+        ct.create_awards()
+        # ct.get_templateId()
+        return render_template("create_act.html",template_adr=temlate_name)
     pass
 
 
