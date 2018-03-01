@@ -6,10 +6,12 @@ import requests
 from utils.db_info import *
 
 class Create_template_act(object):
-    def __init__(self,templateTypeName):
+    def __init__(self,templateTypeName, act_name):
         self.s = requests.session()
         self.s.get('http://api.admin.adhudong.com/login/login_in.htm?name=test&pwd=qq')
         self.templateTypeName=templateTypeName
+        self.act_name=act_name
+        self.db = DbOperations()
 
     def create_template_type(self, locationAdress, preview="https://img0.adhudong.com/template/201802/24/999337a35a1a9169450685cc66560a05.png",prizesNum=6,classifi=1):
         '''
@@ -41,41 +43,31 @@ class Create_template_act(object):
             "templateStyleUrl": templateStyleUrl, #模板样式地址，css
             "templateStyleImage":"https://img3.adhudong.com/template/201802/25/2c6f4700db7982447348db4d0960e3ad.png"
         }
-        # for k in json_body.items():
-        #     print(k)
-        #     # print(v)
         re = self.s.post(post_url, data=json_body)
         print(re.text)
-        # if re.status_code ==200:
-        #     print('create_template,成功了')
+        if re.status_code ==200:
+            print('create_template,成功了')
 
     def get_templateTypeId(self):
         sql = "select id from voyager.template_type where name='" + self.templateTypeName + "'"
-        db = DbOperations()
-        re = db.execute_sql(sql)
+        re = self.db.execute_sql(sql)
         if len(re)!= 1:
             print('名称有问题')
         else:
             templateTypeId = int(re[0][0])
-            db.close_cursor()
-            db.close_db()
             return templateTypeId
 
     def get_templateId(self):
         sql = "select id from voyager.base_template_info where template_type_id='" + str(self.get_templateTypeId()) + "'"
-        db = DbOperations()
-        re = db.execute_sql(sql)
+        re = self.db.execute_sql(sql)
         if len(re)!= 1:
             print('get_templateId有问题')
         else:
             templateId = int(re[0][0])
-            db.close_cursor()
-            db.close_db()
             return templateId
 
-    def create_act(self, act_name,free_num=20, award_num=6):
+    def create_act(self,free_num=20, award_num=6):
         #创建活动sql, act_name,award_num,free_num,template_id
-        self.act_name=act_name
         templateId=self.get_templateId()
         act_sql="""
         INSERT INTO voyager.base_act_info (act_type,act_name,banner_image_url,cover_image_url,award_num,free_num,begin_time,end_time,act_rule_info,`STATUS`,update_time,create_time,template_id,expand1,expand2,expand3,expand4,expand5,expand6,expand7,expand8,expand9,change_times
@@ -103,32 +95,27 @@ class Create_template_act(object):
                 NULL,
                 NULL,
                 NULL
-            );""".format(act_name, award_num, free_num, templateId)
+            );""".format(self.act_name, award_num, free_num, templateId)
         print(act_sql)
-        db = DbOperations()
         try:
-            db.execute_sql(act_sql)
-            db.mycommit()
+            self.db.execute_sql(act_sql)
+            self.db.mycommit()
         except:
-            db.myrollback()
-        db.close_cursor()
-        db.close_db()
+            self.db.myrollback()
 
-    def get_actId(self,act_name):
-        sql = "select id from voyager.base_act_info where act_name='" + act_name + "'"
-        db = DbOperations()
-        re = db.execute_sql(sql)
+    def get_actId(self):
+        sql = "select id from voyager.base_act_info where act_name='" + self.act_name + "'"
+        print(sql)
+        re = self.db.execute_sql(sql)
         if len(re)!= 1:
             print('活动名称有问题')
         else:
             act_id = int(re[0][0])
-            db.close_cursor()
-            db.close_db()
             return act_id
 
     def create_awards(self):
-        # act_id = str(self.get_actId(self.act_name))
-        act_id = str(self.get_actId('吃货福音0226'))
+        act_id = str(self.get_actId())
+        # act_id = str(self.get_actId('淘粉吧转盘0228'))
         #创建奖品的sql
         award_ths =    ''',0,15,1,now(),now(),'谢谢参与','https://img0.adhudong.com/association/201802/22/10bf5888ea77ea198db1dbadc663b05f.jpg',
                   6,NULL,NULL,NULL,'<p>商品详情的信息</p>','<p>&nbsp;1.实物类奖品将在活动结束后5-10个工作日内安排发货，请耐心等待；</p><p>2.卡券类奖品使用规则详见卡券介绍页&nbsp;</p>')'''
@@ -143,7 +130,6 @@ class Create_template_act(object):
         award_lucky4 =  ''',0,0,6,now(),now(),'第4个奖品','https://img0.adhudong.com/association/201802/22/a4a40a28a4b21c1b50011102f07801a0.png',
                 7,NULL,NULL,NULL,'<p>商品详情的信息</p>','<p>&nbsp;1.实物类奖品将在活动结束后5-10个工作日内安排发货，请耐心等待；</p><p>2.卡券类奖品使用规则详见卡券介绍页&nbsp;</p>')'''
         award_list = [award_ths, award_onemore, award_lucky1, award_lucky2, award_lucky3, award_lucky4]
-        db = DbOperations()
         for award in award_list:
             award_sql = '''INSERT INTO act_award (
                 act_id,
@@ -164,22 +150,24 @@ class Create_template_act(object):
             VALUES (''' + act_id + award
             print(award_sql)
             try:
-                db.execute_sql(award_sql)
-                db.mycommit()
+                self.db.execute_sql(award_sql)
+                self.db.mycommit()
             except:
-                db.myrollback()
-        db.close_cursor()
-        db.close_db()
+                self.db.myrollback()
+
+    def __del__(self):
+        self.db.close_cursor()
+        self.db.close_db()
 
 if __name__=='__main__':
     #为模板类型名称
-    ct = Create_template_act('欢乐抽奖机type')
+    ct = Create_template_act('淘粉吧转盘0301',"淘粉吧转盘0301")
     #创建模板类型，create_template_type(self, classifi, locationAdress, preview="https://img0.adhudong.com/template/201802/24/999337a35a1a9169450685cc66560a05.png",prizesNum=6)
-    ct.create_template_type('https://display.adhudong.com/new/lottery_machine.html')
+    ct.create_template_type('https://display.adhudong.com/new/rotary_table_pink.html')
     #创建模板 ct.create_template(templateName, templateStyleUrl)
-    ct.create_template('欢乐抽奖机_0226',"https://display.adhudong.com/activity/favicon.ico")
+    ct.create_template('淘粉吧转盘_0301',"https://display.adhudong.com/activity/favicon.ico")
     #创建活动，    create_act(self, act_name,free_num=20, award_num=6)
-    ct.create_act("'欢乐抽奖机0226'")
+    ct.create_act()
     #创建活动关联的奖品，
     ct.create_awards()
 
