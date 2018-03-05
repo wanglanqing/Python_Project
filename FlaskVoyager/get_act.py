@@ -20,16 +20,15 @@ def get_ad_simulation_info(adid_list):
     num：
     '''
     bidTime = datetime.datetime.now().strftime('%Y-%m-%d')
-    final_re = {}
-
-    for m in range(len(adid_list)):
+    re_dict={}
+    for i in range(len(adid_list)):
         ad_dict={}
         creative_dict = {}
         result_dict = {}
-        print(adid_list[m] + "\'s result")
-        url = "http://101.254.242.11:17091/ad_simulation.do?positionId=1&adZoneId={0}&bidTime={1}".format(adid_list[m],bidTime)
+        print(adid_list[i] + "\'s result")
+        url = "http://101.254.242.11:17091/ad_simulation.do?positionId=1&adZoneId={0}&bidTime={1}".format(adid_list[i],bidTime)
         try:
-            response = requests.get(url, cookies=mycookies).json()['data'][adid_list[m]]
+            response = requests.get(url, cookies=mycookies).json()['data'][adid_list[i]]
             for i in range(len(response)):
                 re = response[i]
                 tmp = re['adOrder']['id']
@@ -39,18 +38,16 @@ def get_ad_simulation_info(adid_list):
                 tmp_ac_name=re['adCreative']['name']
                 ad_dict[tmp]=tmp_name
                 creative_dict[tmp_ac_id]=tmp_ac_name
-                result_dict[i+1]={tmp:tmp_name, tmp_ac_id:tmp_ac_name, 'adid':tmp_adid}
-                # result_dict[i + 1] = {'adid': tmp_adid}
-            # print(json.dumps(result_dict, ensure_ascii=False))
-            final_re[adid_list[m] + "\'s result"]= result_dict
-        except ValueError as e:
-            print(e)
-    return json.dumps(final_re, ensure_ascii=False)
-
+                result_dict[i + 1] = {'主:创:订': [tmp_adid,tmp_ac_id, tmp]}
+            re_dict[adid_list[i]] = result_dict
+            print(json.dumps(result_dict, ensure_ascii=False))
+        except Exception as e:
+            return (e)
+    return (json.dumps(re_dict, ensure_ascii=False))
 
 if __name__=='__main__':
     #模拟投放接口
     # get_ad_simulation_info(['371', '372'])
-    get_ad_simulation_info(['372', '458'])
+    get_ad_simulation_info(['372'])
 
 
